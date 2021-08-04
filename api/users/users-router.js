@@ -2,11 +2,20 @@ const express = require('express');
 
 // You will need `users-model.js` and `posts-model.js` both
 // The middleware functions also need to be required
+const Users = require('./users-model');
+// const Posts = require('../posts/posts-model');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   // RETURN AN ARRAY WITH ALL THE USERS
+  Users.get(req.query)
+  .then(users => {
+    res.status(200).json(users);
+  })
+  .catch(error => {
+    next(error) // send that object over to the err handling midd!
+  });
 });
 
 router.get('/:id', (req, res) => {
@@ -42,3 +51,4 @@ router.post('/:id/posts', (req, res) => {
 });
 
 // do not forget to export the router
+module.exports = router;
