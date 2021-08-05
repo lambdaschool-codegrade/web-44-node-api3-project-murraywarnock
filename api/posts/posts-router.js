@@ -4,15 +4,11 @@ const express = require('express');
 // The middleware functions also need to be required
 // const Users = require('../users/users-model');
 const Posts = require('./posts-model');
-// const Users = require('../users/users-model');
 const { validatePostId, validatePost, logger } = require('../middleware/middleware')
-
 
 const router = express.Router();
 
-
-
-router.get('/', (req, res, next) => {
+router.get('/', logger, (req, res, next) => {
   // RETURN AN ARRAY WITH ALL THE POSTS
   Posts.get(req.query)
   .then(posts => {
@@ -24,11 +20,11 @@ router.get('/', (req, res, next) => {
 });
 module.exports = router;
 
-router.get('/:id', validatePostId, (req, res) => {
+router.get('/:id', validatePostId, logger, (req, res) => {
     res.status(200).json(req.post);
 });
 
-router.post('/', validatePost, (req, res, next) => {
+router.post('/', validatePost, logger, (req, res, next) => {
     // RETURN THE NEWLY CREATED Post OBJECT
     // this needs a middleware to check that the request body is valid
     Posts.insert(req.body)
@@ -40,7 +36,7 @@ router.post('/', validatePost, (req, res, next) => {
     });
   });
 
-  router.put('/:id', validatePost, (req, res, next) => {
+  router.put('/:id', validatePost, logger, (req, res, next) => {
     // RETURN THE NEWLY CREATED Post OBJECT
     // this needs a middleware to check that the request body is valid
     const { id } = req.params
